@@ -1,13 +1,13 @@
 public class Rockola
 {
-    Disco discos[][]=new Disco[20][10];
+    Disco[][] discos =new Disco[20][10];
     private boolean encendido;
     private String msg;
-    private int saldo;
-    public Rockola()
+    Caja caja;
+    public Rockola(int precio ,String feriaCaja)
     {
         encendido=false;
-        saldo=0;
+        caja=new Caja(precio,feriaCaja);
     }
 
     public boolean meterDisco(String artista,String cancionA,String cancionB, int fila, char columna)
@@ -36,21 +36,20 @@ public class Rockola
             return true;
         }
     }
-    public boolean pagar(int cantidad)
+    public boolean pagar(String cantidad)
     {
-        if (!encendido)
-        {
-            msg="La rockola esta apagada";
-            return false;
-        }
-        else if (cantidad<0)
-        {
-            msg = "Cantidad invalida";
-            return false;
-        }
-        saldo+=cantidad;
+        caja.pagar(cantidad);
         return true;
     }
+    public int[] mirarFeria()
+    {
+        return caja.getDineroCajaNum();
+    }
+    public String tomarCambio()
+    {
+        return caja.tomarCambio();
+    }
+
     public boolean reproducir(int fila,char columna,String lado)
     {
         int numColumna =  columna-65;
@@ -60,11 +59,7 @@ public class Rockola
             msg="La rockola esta apagada";
             return false;
         }
-        if (saldo<5)
-        {
-            msg="Saldo insuficiente";
-            return false;
-        }
+
         if (numFila<0 || numFila>19 || numColumna<0 || numColumna>9)
         {
             msg="Position invalida";
@@ -80,13 +75,11 @@ public class Rockola
             if (lado.equals("A") || lado.equals("a"))
             {
                 msg="Reproduciendo "+discos[numFila][numColumna].getArtista()+" / "+discos[numFila][numColumna].getCancionA();
-                saldo=0;
                 return true;
             }
             else if (lado.equals("B")||lado.equals("b"))
             {
                 msg="Reproduciendo "+discos[numFila][numColumna].getArtista()+" / "+discos[numFila][numColumna].getCancionB();
-                saldo=0;
                 return true;
             }
             else
@@ -121,5 +114,9 @@ public class Rockola
     public String getMsg()
     {
         return msg;
+    }
+    public String cajamsg()
+    {
+        return caja.getMsg();
     }
 }
